@@ -1,4 +1,4 @@
-# Framework Laptop 16 LED Matrix Controllers
+# LED Matrix Controllers
 
 Cross-firmware controllers and tooling for the [Framework Laptop 16 LED matrix module](https://frame.work/products/16-led-matrix) using WebHID and Web Serial APIs
 
