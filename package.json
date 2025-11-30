@@ -1,0 +1,23 @@
+{
+  "name": "led-matrix-controllers",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./src/index.js",
+  "module": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "packageManager": "yarn@4.12.0",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.53.3"
+  },
+  "scripts": {
+    "build": "rollup -c"
+  }
+}
