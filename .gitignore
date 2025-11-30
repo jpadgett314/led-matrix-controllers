@@ -4,3 +4,8 @@
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Zero-Installs disabled
+# Documentation: https://yarnpkg.com/features/caching#zero-installs
+#!.yarn/cache
+.pnp.*
