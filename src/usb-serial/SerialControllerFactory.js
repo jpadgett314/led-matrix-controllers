@@ -1,28 +1,22 @@
 import { PortMutex } from './environments/web/PortMutex.js';
 import { PortOperations } from './environments/web/PortOperations.js';
 import { close, getPort } from './environments/web/port.js';
-import { DefaultController } from './firmware/framework-official';
-import { SigrootController } from './firmware/sigroot';
+import { DefaultController } from './firmware/framework-official/DefaultController.js';
+import { SigrootController } from './firmware/sigroot/SigrootController.js';
 
 export class SerialControllerFactory {
-  static async make(environment, firmware) {
-    if (environment === 'web') {
-      const port = await getPort();
-      if (port) {
-        if (firmware === 'framework-official') {
-          return await SerialControllerFactory.makeDefaultWebController(port);
-        } else if (firmware === 'sigroot') {
-          return await SerialControllerFactory.makeSigrootWebController(port);
-        } else if (firmware === 'auto') {
-          return await SerialControllerFactory.makeAutoWebController(port);
-        } else {
-          throw new Error(`Unsupported firmware type: ${firmware}`);
-        }
+  static async make(firmware) {
+    const port = await getPort();
+    if (port) {
+      if (firmware === 'framework-official') {
+        return await SerialControllerFactory.makeDefaultWebController(port);
+      } else if (firmware === 'sigroot') {
+        return await SerialControllerFactory.makeSigrootWebController(port);
+      } else if (firmware === 'auto') {
+        return await SerialControllerFactory.makeAutoWebController(port);
       } else {
-        return null;
+        throw new Error(`Unsupported firmware type: ${firmware}`);
       }
-    } else {
-      throw new Error(`Unsupported environment: ${environment}`);
     }
   }
 

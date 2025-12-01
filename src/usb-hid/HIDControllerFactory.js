@@ -1,22 +1,18 @@
-import { getDevice } from './environments/web/devices.js';
+import { getDevice } from './environments/web/device.js';
 import { HIDOperations } from './environments/web/HIDOperations.js';
-import { SparkleController } from './firmware/sparkle';
+import { SparkleController } from './firmware/sparkle/SparkleController.js';
 
 export class HIDControllerFactory {
-  static async make(environment, firmware) {
-    if (environment === 'web') {
-      const device = await getDevice();
-      if (device) {
-        if (firmware === 'sparkle') {
-          return await HIDControllerFactory.makeSparkleController(device);
-        } else {
-          throw new Error(`Unsupported firmware type: ${firmware}`);
-        }
+  static async make(firmware) {
+    const device = await getDevice();
+    if (device) {
+      if (firmware === 'sparkle') {
+        return await HIDControllerFactory.makeSparkleController(device);
       } else {
-        return null;
+        throw new Error(`Unsupported firmware type: ${firmware}`);
       }
     } else {
-      throw new Error(`Unsupported environment: ${environment}`);
+      return null;
     }
   }
 

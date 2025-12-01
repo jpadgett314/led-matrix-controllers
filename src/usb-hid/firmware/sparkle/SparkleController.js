@@ -1,7 +1,7 @@
 import { GAMMA, HEIGHT, WIDTH } from '../../../hardware-constants.js';
 import { Reports } from './reports.js';
 
-export class ReportAbstractionLayer {
+export class SparkleController {
   constructor(hidOps) {
     this.#hidOps = hidOps;
   }

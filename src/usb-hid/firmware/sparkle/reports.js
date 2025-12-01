@@ -1,7 +1,7 @@
 export const Reports = {
   GLITTER_DEVICE_INFO: {
     id: 0x01,
-    bytes: 32,
+    bytes: 307,
     feature: true,
   },
   GLITTER_BASIC_CMD: {

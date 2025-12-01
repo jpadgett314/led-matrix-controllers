@@ -1,7 +1,7 @@
 import { GAMMA } from '../../../hardware-constants.js';
 import { Command, IDENT_STR_LEN, IDENT_STR_REGEX } from './commands.js';
 
-export class CommandAbstractionLayer {
+export class SigrootController {
   constructor(portMutex) {
     this.#portMutex = portMutex;
   }

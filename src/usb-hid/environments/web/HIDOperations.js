@@ -36,7 +36,7 @@ export class HIDOperations {
     }
 
     if (reply.byteLength != report.bytes) {
-      console.error(`reply length=${reply.length} (exp ${report.bytes})`);
+      console.error(`reply length=${reply.byteLength} (exp ${report.bytes})`);
     }
 
     return reply;

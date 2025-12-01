@@ -1,7 +1,7 @@
 import { HEIGHT, VID_ARR, WIDTH } from '../../../hardware-constants.js';
 import { BitDepth, Command, RX_PACKET_SZ } from './commands.js';
 
-export class CommandAbstractionLayer {
+export class DefaultController {
   constructor(portMutex) {
     this.#bitDepth = BitDepth.MONO_1BIT;
     this.#portMutex = portMutex;
