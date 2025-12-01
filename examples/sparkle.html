@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Sparkle HID Demo</title>
+    <script type="importmap">
+        {
+            "imports": {
+                "led-matrix-controllers": "../src/index.js"
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Sparkle HID Demo</h1>
+    <button id="connect-button">Connect</button>
+    <button id="info-button" disabled>Info</button>
+    <button id="draw-button" disabled>Draw</button>
+    <button id="clear-button" disabled>Clear</button>
+    <script type="module">
+        import { HIDControllerFactory, WIDTH, HEIGHT } from 'led-matrix-controllers';
+        
+        let controller = null;
+
+        document.getElementById('connect-button').onclick = async () => {
+            controller = await HIDControllerFactory.make('sparkle');
+        };
+
+        document.getElementById('info-button').onclick = async () => {
+            const info = await controller.info();
+            console.log(JSON.stringify(info, null, '  '));
+        };
+
+        document.getElementById('draw-button').onclick = async () => {
+            await controller.draw(
+                Array.from({ length: HEIGHT }, (_, i) => 
+                    Array.from({ length: WIDTH }, (_, j) => 
+                        ((i + j) % 16) / 16
+                    )
+                )
+            );
+        };
+
+        document.getElementById('clear-button').onclick = async () => {
+            await controller.draw(
+                Array.from({ length: HEIGHT }, (_, i) => 
+                    Array.from({ length: WIDTH }, (_, j) => 
+                        0
+                    )
+                )
+            );   
+        }
+    </script>
+</body>
+</html>
