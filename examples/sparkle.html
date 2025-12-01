@@ -6,7 +6,7 @@
     <script type="importmap">
         {
             "imports": {
-                "led-matrix-controllers": "../src/index.js"
+                "led-matrix-controllers": "https://esm.sh/led-matrix-controllers@latest"
             }
         }
     </script>
@@ -14,8 +14,8 @@
 <body>
     <h1>Sparkle HID Demo</h1>
     <button id="connect-button">Connect</button>
-    <button id="info-button" disabled>Info</button>
-    <button id="draw-button" disabled>Draw</button>
+    <button id="info-button">Info</button>
+    <button id="draw-button">Draw</button>
     <script type="module">
         import { HIDControllerFactory, WIDTH, HEIGHT } from 'led-matrix-controllers';
         

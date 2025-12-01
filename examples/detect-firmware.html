@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Detect Firmware Demo</title>
+    <script type="importmap">
+        {
+            "imports": {
+                "led-matrix-controllers": "https://esm.sh/led-matrix-controllers@latest"
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Detect Firmware Demo</h1>
+    <button id="connect-hid">Connect HID</button>
+    <button id="connect-serial">Connect Serial</button>
+    <button id="reboot">BOOTSEL Reboot</button>
+    <script type="module">
+        import { HIDControllerFactory, SerialControllerFactory } from 'led-matrix-controllers';
+        
+        let controller = null;
+
+        document.getElementById('connect-hid').onclick = async () => {
+            controller = await HIDControllerFactory.make('detect');
+            if (controller) {
+                console.log(controller);
+            } else {
+                console.log('No module found.');
+            }
+        };
+
+        document.getElementById('connect-serial').onclick = async () => {
+            controller = await SerialControllerFactory.make('detect');
+            if (controller) {
+                console.log(controller);
+            } else {
+                console.log('No module found.');
+            }
+        };
+
+        document.getElementById('reboot').onclick = async () => {
+            await controller.bootloader();
+        };
+    </script>
+</body>
+</html>
