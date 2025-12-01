@@ -7,35 +7,10 @@ export class DefaultController {
     this.#portMutex = portMutex;
   }
 
-  async verifyFirmware() {
-    let packet = null;
-
+  async bootloader() {
     await this.#portMutex.acquire(async p => {
-      await p.tx([...VID_ARR, Command.VERSION]);
-      packet = await p.rx(RX_PACKET_SZ);
+      await p.tx([...VID_ARR, Command.BOOTLOADER]);
     });
-
-    const isPacket = packet.length == RX_PACKET_SZ;
-    const isPadded = packet.slice(3).every(e => e == 0x00);
-
-    return isPacket && isPadded;
-  }
-
-  async version() {
-    let ver = {};
-
-    await this.#portMutex.acquire(async p => {
-      await p.tx([...VID_ARR, Command.VERSION]);
-      const response = await p.rx(RX_PACKET_SZ);
-
-      // MMMMMMMM mmmmPPPP 0000000p
-      ver.major = response[0];
-      ver.minor = response[1] >> 4;
-      ver.patch = response[1] & 0x0F;
-      ver.preRelease = response[2] == 1;
-    });
-
-    return ver;
   }
 
   async draw(matrix) {
@@ -82,6 +57,37 @@ export class DefaultController {
         }
       );
     }
+  }
+
+  async verifyFirmware() {
+    let packet = null;
+
+    await this.#portMutex.acquire(async p => {
+      await p.tx([...VID_ARR, Command.VERSION]);
+      packet = await p.rx(RX_PACKET_SZ);
+    });
+
+    const isPacket = packet.length == RX_PACKET_SZ;
+    const isPadded = packet.slice(3).every(e => e == 0x00);
+
+    return isPacket && isPadded;
+  }
+
+  async version() {
+    let ver = {};
+
+    await this.#portMutex.acquire(async p => {
+      await p.tx([...VID_ARR, Command.VERSION]);
+      const response = await p.rx(RX_PACKET_SZ);
+
+      // MMMMMMMM mmmmPPPP 0000000p
+      ver.major = response[0];
+      ver.minor = response[1] >> 4;
+      ver.patch = response[1] & 0x0F;
+      ver.preRelease = response[2] == 1;
+    });
+
+    return ver;
   }
 
   #bitDepth;

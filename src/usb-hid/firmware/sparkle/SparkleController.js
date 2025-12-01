@@ -1,5 +1,7 @@
 import { GAMMA, HEIGHT, WIDTH } from '../../../hardware-constants.js';
-import { Commands, Reports } from './reports.js';
+import { BootMode, Commands, Reports } from './reports.js';
+
+export { BootMode } from './reports.js';
 
 export class SparkleController {
   constructor(hidOps) {
@@ -104,6 +106,17 @@ export class SparkleController {
 
   // --- generic methods ---
 
+  async bootloader() {
+    await this.reboot(BootMode.BOOTSEL);
+  }
+  
+  async draw(matrix) {
+    await this.#hidOps.send(
+      Reports.GLITTER_GRID_PWM_CNTL,
+      matrix.flat().map(v => GAMMA[Math.floor((v ?? 0) * 255)])
+    );
+  }
+
   async verifyFirmware() {
     try {
       const info = await this.info();
@@ -119,13 +132,6 @@ export class SparkleController {
   async version() {
     // Not Available
     return { major: 1, minor: 0 };
-  }
-
-  async draw(matrix) {
-    return await this.#hidOps.send(
-      Reports.GLITTER_GRID_PWM_CNTL,
-      matrix.flat().map(v => GAMMA[Math.floor((v ?? 0) * 255)])
-    );
   }
 
   #hidOps;

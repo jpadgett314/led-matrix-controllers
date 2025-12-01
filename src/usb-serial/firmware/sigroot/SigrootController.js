@@ -6,6 +6,35 @@ export class SigrootController {
     this.#portMutex = portMutex;
   }
 
+  async bootloader() {
+    await this.#portMutex.acquire(async p => {
+      await p.tx([Command.BOOTLOADER]);
+    });
+  }
+
+  async draw(matrix) {
+    if (!this.#scaleInitialized) {
+      await this.#portMutex.acquire(
+        async p => {
+          await p.tx([Command.SET_CONST_SCALE, 0x20]);
+        }
+      );
+      this.#scaleInitialized = true;
+    }
+
+    const bytes = matrix.flat().map(v => 
+      GAMMA[Math.floor((v ?? 0) * 255)]
+    );
+
+    // Only execute the most recent call 
+    await this.#portMutex.acquireIdempotent(
+      'drawMatrix', 
+      async p => {
+        await p.tx([Command.DRAW_PWM, ...bytes]);
+      }
+    );
+  }
+
   async verifyFirmware() {
     let ident = null;
 
@@ -39,29 +68,6 @@ export class SigrootController {
     } else {
       return null;
     }
-  }
-
-  async draw(matrix) {
-    if (!this.#scaleInitialized) {
-      await this.#portMutex.acquire(
-        async p => {
-          await p.tx([Command.SET_CONST_SCALE, 0x20]);
-        }
-      );
-      this.#scaleInitialized = true;
-    }
-
-    const bytes = matrix.flat().map(v => 
-      GAMMA[Math.floor((v ?? 0) * 255)]
-    );
-
-    // Only execute the most recent call 
-    await this.#portMutex.acquireIdempotent(
-      'drawMatrix', 
-      async p => {
-        await p.tx([Command.DRAW_PWM, ...bytes]);
-      }
-    );
   }
 
   #portMutex;

@@ -8,11 +8,11 @@ export class HIDControllerFactory {
     if (device) {
       if (firmware === 'sparkle') {
         return await HIDControllerFactory.makeSparkleController(device);
+      } else if (firmware === 'detect') {
+        return await HIDControllerFactory.makeDetectedController(device);
       } else {
         throw new Error(`Unsupported firmware type: ${firmware}`);
       }
-    } else {
-      return null;
     }
   }
 
@@ -22,6 +22,13 @@ export class HIDControllerFactory {
       return new SparkleController(
         new HIDOperations(device)
       );
+    }
+  }
+
+  static async makeDetectedController(device) {
+    const ctrl1 = await HIDControllerFactory.makeSparkleController(device);
+    if (ctrl1.verifyFirmware()) {
+      return ctrl1;
     }
   }
 }
