@@ -16,7 +16,6 @@
     <button id="connect-button">Connect</button>
     <button id="info-button" disabled>Info</button>
     <button id="draw-button" disabled>Draw</button>
-    <button id="clear-button" disabled>Clear</button>
     <script type="module">
         import { HIDControllerFactory, WIDTH, HEIGHT } from 'led-matrix-controllers';
         
@@ -40,16 +39,6 @@
                 )
             );
         };
-
-        document.getElementById('clear-button').onclick = async () => {
-            await controller.draw(
-                Array.from({ length: HEIGHT }, (_, i) => 
-                    Array.from({ length: WIDTH }, (_, j) => 
-                        0
-                    )
-                )
-            );   
-        }
     </script>
 </body>
 </html>

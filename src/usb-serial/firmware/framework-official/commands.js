@@ -31,6 +31,6 @@ export const Pattern = Object.freeze({
 
 // DRAW or DRAW_GREY_COL_BUFFER
 export const BitDepth = Object.freeze({
-  GRAY_8BIT: { text: '8-bit Grayscale' },
-  MONO_1BIT: { text: '1-bit Monochrome' },
+  GRAY_8BIT: '8-bit',
+  MONO_1BIT: '1-bit',
 })

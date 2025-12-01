@@ -30,3 +30,8 @@ export const Commands = {
   GLITTER_CMD_DRAW_PIXEL: 0x05,
   GLITTER_CMD_DRAW_LINE: 0x06
 }
+
+export const BootMode = {
+  BOOTSEL: 0x00,
+  NORMAL: 0x01,
+}
