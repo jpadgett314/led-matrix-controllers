@@ -1,6 +1,6 @@
 # LED Matrix Controllers
 
-Cross-firmware controllers and tooling for the [Framework Laptop 16 LED matrix module](https://frame.work/products/16-led-matrix) using WebHID and Web Serial APIs
+Cross-firmware controllers for the [Framework Laptop 16 LED matrix module](https://frame.work/products/16-led-matrix) using WebHID and Web Serial APIs
 
 ## Supported Firmwares
 
@@ -14,11 +14,51 @@ If you maintain another firmware or a fork, please open an issue or submit a PR!
 
 ### Installation
 
-WIP
+#### Browser
+
+```html
+<script type="module">
+    import { DefaultController } from 'https://esm.sh/led-matrix-controllers@latest';
+    const controller = new DefaultController();
+    await controller.connect();
+    // ...
+</script>
+
+```
+
+#### Node.js
+
+```bash
+npm install led-matrix-controllers
+```
+
+Also see [examples/webpack/](examples/webpack/)
 
 ### Usage
 
-WIP
+#### For specific firmware
+
+```js
+// Controllers for specific firmware
+import { DefaultController, SigrootController, SparkleController } from 'led-matrix-controllers';
+
+const controller = new DefaultController();
+await controller.connect();
+await controller.draw( /* 34x9 matrix array */ );
+```
+
+Also see [examples/sparkle.html](examples/sparkle.html)
+
+#### For specific interface
+
+```js
+import { HardwareControllerFactory } from 'led-matrix-controllers';
+
+let controller = HardwareControllerFactory.detectSerial();
+let controller = HardwareControllerFactory.detectHID();
+```
+
+Also see [examples/detect-firmware.html](examples/detect-firmware.html)
 
 ## Development
 
