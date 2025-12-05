@@ -1,3 +1,4 @@
+import { HEIGHT, WIDTH } from '../../../hardware-constants.js';
 import { getDevice } from '../../../web-hid/device.js';
 import { HIDOperations } from '../../../web-hid/HIDOperations.js';
 import { ReportAbstractionLayer } from './ReportAbstractionLayer.js';

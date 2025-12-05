@@ -22,7 +22,7 @@ export class HardwareControllerFactory {
 
   static async detectHID() {
     const c1 = new SparkleController();
-    
+
     await c1.connect();
     if (await c1.verifyFirmware()) {
       return c1;
