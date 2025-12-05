@@ -1,0 +1,54 @@
+import { close, getPort } from '../../../web-serial/port.js';
+import { PortMutex } from '../../../web-serial/PortMutex.js';
+import { PortOperations } from '../../../web-serial/PortOperations.js';
+import { CommandAbstractionLayer } from './CommandAbstractionLayer.js';
+
+export class DefaultController extends CommandAbstractionLayer {
+  async bootloader() {
+    return super.bootloader();
+  }
+
+  async connect() {
+    const port = await getPort();
+
+    if (port?.connected) {
+      await close(port);
+      await port.open({ baudRate: 115200 });
+      this.portMutex = new PortMutex(new PortOperations(port));
+    }
+  }
+
+  async draw(matrix) {
+    switch (this.#bitDepth) {
+
+      case BitDepth.GRAY_8BIT:
+        super.drawGrayscale(matrix);
+        break;
+
+      case BitDepth.MONO_1BIT:
+        super.draw(matrix);
+        break;
+    }
+  }
+
+  async verifyFirmware() {
+    try {
+      const version = await super.version();
+
+      return version
+        && version.major != undefined
+        && version.minor != undefined
+        && version.patch != undefined
+        && version.preRelease != undefined;
+        
+    } catch {
+      return false;
+    }
+  }
+
+  async version() {
+    return super.version();
+  }
+
+  #bitDepth;
+}

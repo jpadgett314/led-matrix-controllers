@@ -1,3 +1,14 @@
+import { PID, VID } from '../hardware-constants.js';
+
+const extraPorts = [];
+
+const filters = [
+  {
+    usbVendorId: VID,
+    usbProductId: PID,
+  }
+];
+
 export class PortSelectionCancelled extends Error {
   constructor() {
     super('User cancelled port selection.');
@@ -16,13 +27,20 @@ export class PortUnavailable extends Error {
 
 export async function getPort() {
   try {
-    const port = await navigator.serial.requestPort();
-    const { usbProductId, usbVendorId } = port;
-    console.log('Selected port:', port);
-    if (usbProductId && usbVendorId) {
-      console.log(`VID:PID ${usbVendorId}:${usbProductId}`);
+    if (extraPorts && extraPorts.length > 0) {
+      return extraPorts.pop();
     }
-    return port;
+
+    extraPorts.push(...await navigator.serial.getPorts());
+    if (extraPorts && extraPorts.length > 0) {
+      return extraPorts.pop();
+    }
+
+    extraPorts.push(...await navigator.serial.requestPort({ filters }));
+    if (extraPorts && extraPorts.length > 0) {
+      return extraPorts.pop();
+    }
+
   } catch (e) {
     if (e.name == 'NotFoundError') {
       throw new PortSelectionCancelled();

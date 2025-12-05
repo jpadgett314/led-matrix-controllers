@@ -18,11 +18,9 @@ export const Command = Object.freeze({
   /* 's' */ SET_CONST_SCALE: 0x73,
   /* 'p' */ SET_PX_PWM: 0x70,
   /* 'q' */ SET_PX_SCALE: 0x71,
-  /* 127 */ IDENT: 0x7F,
+  /* 127 */ IDENTITY_STRING: 0x7F,
 });
 
-export const IDENT_STR_LEN = 25;
+export const IDENTITY_STR_LEN = 25;
 
-export const IDENT_STR_REGEX = /^Sig\sFW\sLED\sMatrix\sFW\sV(\d+)\.(\d+)$/;
-
-export const IDENT_STR_PREFIX = 'Sig FW LED Matrix FW';
+export const IDENTITY_STR_REGEX = /^Sig\sFW\sLED\sMatrix\sFW\sV(\d+)\.(\d+)$/;

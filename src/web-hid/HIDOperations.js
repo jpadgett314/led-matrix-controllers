@@ -17,11 +17,11 @@ export class HIDOperations {
     if (report.feature)  {
       await this.#device.sendFeatureReport(report.id, buffer);
     } else {
-      await this.#device.sendReport(report.buffer);
+      await this.#device.sendReport(report.id, buffer);
     }
   }
 
-  async receive(report) {
+  async request(report) {
     let reply = [];
 
     if (report.feature) {
@@ -29,14 +29,15 @@ export class HIDOperations {
     } else {
       /* 
        * HID input reports are used for unprompted data.
-       * An event system must be used.
        * See WebHID `HIDInputReportEvent`
        */
       throw new Error('Invalid operation');
     }
 
     if (reply.byteLength != report.bytes) {
-      console.error(`reply length=${reply.byteLength} (exp ${report.bytes})`);
+      const exp = report.bytes;
+      const act = reply.byteLength;
+      console.error(`reply length=${act} (expected ${exp})`);
     }
 
     return reply;

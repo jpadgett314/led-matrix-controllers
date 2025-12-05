@@ -17,12 +17,12 @@
     <button id="connect-serial">Connect Serial</button>
     <button id="reboot">BOOTSEL Reboot</button>
     <script type="module">
-        import { HIDControllerFactory, SerialControllerFactory } from 'led-matrix-controllers';
+        import { HardwareControllerFactory } from 'led-matrix-controllers';
         
         let controller = null;
 
         document.getElementById('connect-hid').onclick = async () => {
-            controller = await HIDControllerFactory.make('detect');
+            controller = await HardwareControllerFactory.detectHID();
             if (controller) {
                 console.log(controller);
             } else {
@@ -31,7 +31,7 @@
         };
 
         document.getElementById('connect-serial').onclick = async () => {
-            controller = await SerialControllerFactory.make('detect');
+            controller = await HardwareControllerFactory.detectSerial();
             if (controller) {
                 console.log(controller);
             } else {

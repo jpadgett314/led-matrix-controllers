@@ -17,17 +17,18 @@
     <button id="info-button">Info</button>
     <button id="draw-button">Draw</button>
     <script type="module">
-        import { HIDControllerFactory, WIDTH, HEIGHT } from 'led-matrix-controllers';
+        import { SparkleController, WIDTH, HEIGHT } from 'led-matrix-controllers';
         
-        let controller = null;
+        let controller = new SparkleController();
 
         document.getElementById('connect-button').onclick = async () => {
-            controller = await HIDControllerFactory.make('sparkle');
+            await controller.connect();
+            console.log('SparkleController connected');
         };
 
         document.getElementById('info-button').onclick = async () => {
             const info = await controller.info();
-            console.log(JSON.stringify(info, null, '  '));
+            console.log(info);
         };
 
         document.getElementById('draw-button').onclick = async () => {

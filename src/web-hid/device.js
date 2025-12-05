@@ -1,4 +1,4 @@
-import { PID, VID } from '../../../hardware-constants.js';
+import { PID, VID } from '../hardware-constants.js';
 
 const extraDevices = [];
 
@@ -7,7 +7,7 @@ const filters = [
     vendorId: VID,
     productId: PID,
   }
-]
+];
 
 export class DeviceSelectionCancelled extends Error {
   constructor() {

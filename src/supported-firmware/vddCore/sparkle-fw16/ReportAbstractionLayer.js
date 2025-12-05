@@ -1,15 +1,13 @@
-import { GAMMA, HEIGHT, WIDTH } from '../../../hardware-constants.js';
-import { BootMode, Commands, Reports } from './reports.js';
+import { GAMMA } from '../../../hardware-constants.js';
+import { Commands, Reports } from './reports.js';
 
-export { BootMode } from './reports.js';
-
-export class SparkleController {
-  constructor(hidOps) {
-    this.#hidOps = hidOps;
+export class ReportAbstractionLayer {
+  constructor(device = null) {
+    this.device = device;
   }
 
   async info() {
-    const infoRaw = await this.#hidOps.receive(Reports.GLITTER_DEVICE_INFO);
+    const infoRaw = await this.device.request(Reports.GLITTER_DEVICE_INFO);
 
     return {
       sleep_pin: infoRaw.getUint8(1),
@@ -22,46 +20,48 @@ export class SparkleController {
       display_width: infoRaw.getUint8(8),
       display_height: infoRaw.getUint8(9),
       timeout_ms: infoRaw.getUint32(10),
+      version_major: infoRaw.getUint8(14),
+      version_minor: infoRaw.getUint8(15),
     };
   }
 
   async wake() {
-    await this.#hidOps.send(
+    await this.device.send(
       Reports.GLITTER_BASIC_CMD,
       [Commands.GLITTER_CMD_SLEEP, false]
     );
   }
 
   async sleep() {
-    await this.#hidOps.send(
+    await this.device.send(
       Reports.GLITTER_BASIC_CMD,
       [Commands.GLITTER_CMD_SLEEP, true]
     );
   }
 
   async disableSleep() {
-    await this.#hidOps.send(
+    await this.device.send(
       Reports.GLITTER_BASIC_CMD, 
       [Commands.GLITTER_CMD_SET_SLEEP_TIMEOUT, 0xff, 0xff, 0xff, 0xff]
     );
   }
 
   async disableDeepSleep() {
-    await this.#hidOps.send(
+    await this.device.send(
       Reports.GLITTER_BASIC_CMD, 
       [Commands.GLITTER_CMD_WAKE_ON_COMMAND, 0x01]
     );
   }
 
   async disableSleepTimer() {
-    await this.#hidOps.send(
+    await this.device.send(
       Reports.GLITTER_BASIC_CMD, 
       [Commands.GLITTER_CMD_SET_SLEEP_TIMEOUT, 0x00, 0x00, 0x00, 0x00]
     );
   }
   
   async enableDeepSleep() {
-    await this.#hidOps.send(
+    await this.device.send(
       Reports.GLITTER_BASIC_CMD, 
       [Commands.GLITTER_CMD_WAKE_ON_COMMAND, 0x00]
     );
@@ -71,7 +71,7 @@ export class SparkleController {
     const view = new DataView(new ArrayBuffer(4));
     const littleEndian = false;
     view.setInt32(0, milliseconds, littleEndian);
-    await this.#hidOps.send(
+    await this.device.send(
       Reports.GLITTER_BASIC_CMD, 
       [
         Commands.GLITTER_CMD_SET_SLEEP_TIMEOUT, 
@@ -84,55 +84,32 @@ export class SparkleController {
   }
 
   async reboot(mode) {
-    await this.#hidOps.send(
+    await this.device.send(
       Reports.GLITTER_BASIC_CMD, 
       [Commands.GLITTER_CMD_REBOOT, mode]
     );
   }
 
+  async drawMatrix(matrix) {
+    await this.device.send(
+      Reports.GLITTER_GRID_PWM_CNTL,
+      matrix.flat().map(v => GAMMA[Math.floor((v ?? 0) * 255)])
+    );
+  }
+
   async drawPixel(r, c, brightness) {
-    await this.#hidOps.send(
+    await this.device.send(
       Reports.GLITTER_BASIC_CMD,
       [Commands.GLITTER_CMD_DRAW_PIXEL, c, r, brightness]
     );
   }
 
   async drawLine({r1, c1}, {r2, c2}, brightness) {
-    await this.#hidOps.send(
+    await this.device.send(
       Reports.GLITTER_BASIC_CMD,
       [Commands.GLITTER_CMD_DRAW_PIXEL, r1, c1, r2, c2, brightness]
     );
   }
 
-  // --- generic methods ---
-
-  async bootloader() {
-    await this.reboot(BootMode.BOOTSEL);
-  }
-  
-  async draw(matrix) {
-    await this.#hidOps.send(
-      Reports.GLITTER_GRID_PWM_CNTL,
-      matrix.flat().map(v => GAMMA[Math.floor((v ?? 0) * 255)])
-    );
-  }
-
-  async verifyFirmware() {
-    try {
-      const info = await this.info();
-      return (
-        info.display_height == HEIGHT &&
-        info.display_width == WIDTH
-      );
-    } catch {
-      return false;
-    }
-  }
-
-  async version() {
-    // Not Available
-    return { major: 1, minor: 0 };
-  }
-
-  #hidOps;
+  device;
 }
