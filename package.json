@@ -1,6 +1,10 @@
 {
   "name": "led-matrix-controllers",
   "version": "0.2.3",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpadgett314/led-matrix-controllers.git"
+  },
   "type": "module",
   "main": "./src/index.js",
   "module": "./src/index.js",
