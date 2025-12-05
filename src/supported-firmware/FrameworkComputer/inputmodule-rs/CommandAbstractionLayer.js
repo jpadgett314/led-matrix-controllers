@@ -12,6 +12,12 @@ export class CommandAbstractionLayer {
     });
   }
 
+  async brightness(brightness) {
+    await this.portMutex.acquire(async p => {
+      await p.tx([...VID_ARR, Command.BRIGHTNESS, brightness]);
+    });
+  }
+
   async draw(matrix) {
     let index = 0;
     let output = new Uint8Array(39).fill(0);
@@ -49,9 +55,51 @@ export class CommandAbstractionLayer {
       'drawMatrix', 
       async p => {
         for (let i = 0; i < WIDTH; i++) {
-          await p.tx([Command.STAGE_GREY_COL, i, ...buffers[i]]);
+          await p.tx([...VID_ARR, Command.STAGE_GREY_COL, i, ...buffers[i]]);
         }
-        await p.tx([Command.DRAW_GREY_COL_BUFFER]);
+        await p.tx([...VID_ARR, Command.DRAW_GREY_COL_BUFFER]);
+      }
+    );
+  }
+
+  async asleep() {
+    let asleep = false;
+
+    await this.portMutex.acquire(async p => {
+      await p.tx([...VID_ARR, Command.SLEEP]);
+      asleep = await p.rx(RX_PACKET_SZ);
+      asleep = asleep[0] != 0x00;
+    });
+
+    return asleep;
+  }
+
+  async sleep() {
+    await this.portMutex.acquire(async p => {
+      await p.tx([...VID_ARR, Command.SLEEP, 0x01]);
+    });
+  }
+
+  async wake() {
+    await this.portMutex.acquire(async p => {
+      await p.tx([...VID_ARR, Command.SLEEP]);
+    });
+  }
+
+  async pattern(pattern) {
+    await this.portMutex.acquireIdempotent(
+      'drawMatrix',
+      async p => {
+        await p.tx([...VID_ARR, Command.PATTERN, pattern]);
+      }
+    );
+  }
+
+  async percent(percent) {
+    await this.portMutex.acquireIdempotent(
+      'drawMatrix',
+      async p => {
+        await p.tx([...VID_ARR, Command.PATTERN, Pattern.PERCENTAGE, percent]);
       }
     );
   }
