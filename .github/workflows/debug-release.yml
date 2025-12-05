@@ -1,0 +1,9 @@
+name: Test Release Trigger
+on:
+  release:
+    types: [created]
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Release event fired!"
