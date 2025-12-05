@@ -23,7 +23,6 @@ If you maintain another firmware or a fork, please open an issue or submit a PR!
     await controller.connect();
     // ...
 </script>
-
 ```
 
 #### Node.js
@@ -54,8 +53,9 @@ Also see [examples/sparkle.html](examples/sparkle.html)
 ```js
 import { HardwareControllerFactory } from 'led-matrix-controllers';
 
-let controller = HardwareControllerFactory.detectSerial();
-let controller = HardwareControllerFactory.detectHID();
+// connect to device
+const foo = HardwareControllerFactory.detectSerial();
+const bar = HardwareControllerFactory.detectHID();
 ```
 
 Also see [examples/detect-firmware.html](examples/detect-firmware.html)
