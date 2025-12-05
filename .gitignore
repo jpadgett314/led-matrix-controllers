@@ -10,4 +10,8 @@
 #!.yarn/cache
 .pnp.*
 
+# build output
 dist
+
+# node
+node_modules

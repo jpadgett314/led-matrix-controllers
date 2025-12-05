@@ -64,21 +64,18 @@ Also see [examples/detect-firmware.html](examples/detect-firmware.html)
 
 ### Prerequisites
 
-* **Node.js** (v16.9.0 or later recommended for corepack)
+* **Node.js** (v18 or later)
 
 ### Installation
 
 Setup development environment
 
 ```bash
-npm install -g corepack 
-corepack enable
-yarn set version stable
-yarn install
+npm install
 ```
 
 Bundle (optional)
 
 ```bash
-yarn build
+npm run build
 ```
