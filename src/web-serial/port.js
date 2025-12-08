@@ -31,12 +31,12 @@ export async function getPort() {
       return extraPorts.pop();
     }
 
-    extraPorts.push(...await navigator.serial.getPorts());
+    extraPorts.push(...(await navigator.serial.getPorts()));
     if (extraPorts && extraPorts.length > 0) {
       return extraPorts.pop();
     }
 
-    extraPorts.push(...await navigator.serial.requestPort({ filters }));
+    extraPorts.push(...(await navigator.serial.requestPort({ filters })));
     if (extraPorts && extraPorts.length > 0) {
       return extraPorts.pop();
     }
