@@ -2,6 +2,7 @@ import { close, getPort } from '../../../web-serial/port.js';
 import { PortMutex } from '../../../web-serial/PortMutex.js';
 import { PortOperations } from '../../../web-serial/PortOperations.js';
 import { CommandAbstractionLayer } from './CommandAbstractionLayer.js';
+import { BitDepth } from './commands.js';
 
 export class DefaultController extends CommandAbstractionLayer {
   async bootloader() {
@@ -19,15 +20,18 @@ export class DefaultController extends CommandAbstractionLayer {
   }
 
   async draw(matrix) {
-    switch (this.#bitDepth) {
+    switch (this.bitDepth ?? BitDepth.MONO_1BIT) {
 
-      case BitDepth.GRAY_8BIT:
+      case (BitDepth.GRAY_8BIT):
         super.drawGrayscale(matrix);
         break;
 
-      case BitDepth.MONO_1BIT:
+      case (BitDepth.MONO_1BIT):
         super.draw(matrix);
         break;
+
+      default:
+        console.error(`Unsupported bitdepth: ${this.bitDepth}`);
     }
   }
 
@@ -49,6 +53,4 @@ export class DefaultController extends CommandAbstractionLayer {
   async version() {
     return super.version();
   }
-
-  #bitDepth;
 }

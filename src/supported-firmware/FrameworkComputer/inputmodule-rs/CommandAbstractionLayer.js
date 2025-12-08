@@ -1,4 +1,4 @@
-import { HEIGHT, VID_ARR, WIDTH } from '../../../hardware-constants.js';
+import { GAMMA, HEIGHT, VID_ARR, WIDTH } from '../../../hardware-constants.js';
 import { Command, RX_PACKET_SZ } from './commands.js';
 
 export class CommandAbstractionLayer {
@@ -44,7 +44,7 @@ export class CommandAbstractionLayer {
     // Transpose & Gamma Correction
     const buffers = Array.from(
       { length: WIDTH }, 
-      (_, c) => new Array(
+      (_, c) => Array.from(
         { length: HEIGHT }, 
         (_, r) => GAMMA[Math.floor((matrix[r][c] ?? 0) * 255)]
       )

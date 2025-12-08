@@ -22,7 +22,7 @@ export class PortMutex {
   async acquireIdempotent(key, fn) {
     const trace = new Error('created bad cb').stack;
 
-    if  (this.#deduper.has(key)) {
+    if (this.#deduper.has(key)) {
       console.info(`"${key}" request coalesced.`);
     }
 
