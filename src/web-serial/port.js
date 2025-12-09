@@ -1,13 +1,6 @@
 import { PID, VID } from '../hardware-constants.js';
 
-const extraPorts = [];
-
-const filters = [
-  {
-    usbVendorId: VID,
-    usbProductId: PID,
-  }
-];
+const filters = [{ usbVendorId: VID, usbProductId: PID }];
 
 export class PortSelectionCancelled extends Error {
   constructor() {
@@ -25,39 +18,93 @@ export class PortUnavailable extends Error {
   }
 }
 
-export async function getPort() {
+async function requestPort() {
   try {
-    if (extraPorts && extraPorts.length > 0) {
-      return extraPorts.pop();
-    }
-
-    extraPorts.push(...(await navigator.serial.getPorts()));
-    if (extraPorts && extraPorts.length > 0) {
-      return extraPorts.pop();
-    }
-
-    extraPorts.push(...(await navigator.serial.requestPort({ filters })));
-    if (extraPorts && extraPorts.length > 0) {
-      return extraPorts.pop();
-    }
-
-  } catch (e) {
-    if (e.name == 'NotFoundError') {
-      throw new PortSelectionCancelled();
-    } else if (e.name == 'InvalidStateError') {
-      throw new PortUnavailable();
+    if (navigator.serial.requestPort) {
+      return await navigator.serial.requestPort({ filters });
     } else {
-      throw e;
+      return null; // Web Worker
+    }
+  } catch (e) {
+    switch (e.name) {
+      case ('NotFoundError'):
+        throw new PortSelectionCancelled();
+      case ('InvalidStateError'):
+        throw new PortUnavailable();
+      case ('SecurityError'): // No user gesture
+        return null;
+      default:
+        throw e;
     }
   }
 }
 
+class KnownPorts {
+  used = new Set();
+  unused = [];
+
+  async getOrFetchUnused() {
+    let port = this.unused.pop();
+    
+    if (!port) {
+      const systemPorts = await navigator.serial.getPorts({ filters });
+      this.#enqueueUnique(systemPorts);
+      port = this.unused.pop();
+    }
+
+    if (!port) {
+      const manualPort = await requestPort();
+      this.#enqueueUnique([manualPort]);
+      port = this.unused.pop();
+    }
+
+    if (port) {
+      this.used.add(port);
+    }
+    
+    return port;
+  }
+
+  #enqueueUnique(ports) {
+    if (ports) {
+      for (const port of ports) {
+        if (port && !this.used.has(port) && !this.unused.includes(port)) {
+          this.unused.push(port);
+        }
+      }
+    }
+  }
+}
+
+const knownPorts = new KnownPorts();
+
+/**
+ * Adds user-selected port to permitted ports. Only for use outside of Web 
+ * Worker to establish permission for use within Web Worker.
+ * @returns {null}
+ */
+export async function requestPortForWorker() {
+  const _ = await requestPort();
+}
+
+/**
+ * Never returns the same port twice. 
+ * @returns {(SerialPort|null)}
+ */
+export async function getUnusedPort() {
+  return await knownPorts.getOrFetchUnused();
+}
+
+/**
+ * Close port without throwing if already closed.
+ * @param {SerialPort} port 
+ */
 export async function close(port) {
   try {
     await port.close();
   } catch(e) {
     if (e.name != 'InvalidStateError') {
-      if (e.message != "Failed to execute 'close' on 'SerialPort': The port is already closed.") {
+      if (e.message.includes('The port is already closed')) {
         throw e;
       }
     }

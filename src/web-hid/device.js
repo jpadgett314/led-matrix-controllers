@@ -1,13 +1,6 @@
 import { PID, VID } from '../hardware-constants.js';
 
-const extraDevices = [];
-
-const filters = [
-  {
-    vendorId: VID,
-    productId: PID,
-  }
-];
+const filters = [{ vendorId: VID, productId: PID }];
 
 export class DeviceSelectionCancelled extends Error {
   constructor() {
@@ -17,20 +10,77 @@ export class DeviceSelectionCancelled extends Error {
   }
 }
 
-export async function getDevice() {
-  if (extraDevices && extraDevices.length > 0) {
-    return extraDevices.pop();
+async function requestDevice() {
+  try {
+    if (navigator.serial.requestPort) {
+      return await navigator.serial.requestDevice({ filters });
+    } else {
+      return null; // Web Worker
+    }
+  } catch (e) {
+    switch (e.name) {
+      case ('NotFoundError'):
+        throw new DeviceSelectionCancelled();
+      case ('SecurityError'): // No user gesture
+        return null;
+      default:
+        throw e;
+    }
+  }
+}
+
+class KnownDevices {
+  used = new Set();
+  unused = [];
+
+  async getOrFetchUnused() {
+    let device = this.unused.pop();
+
+    if (!device) {
+      const systemDevices = await navigator.hid.getDevices({ filters });
+      this.#enqueueUnique(systemDevices);
+      device = this.unused.pop();
+    }
+
+    if (!device) {
+      const manualDevices = await requestDevice();
+      this.#enqueueUnique([manualDevices]);
+      device = this.unused.pop();
+    }
+
+    if (device) {
+      this.used.add(device);
+    }
+
+    return device;
   }
 
-  extraDevices.push(...(await navigator.hid.getDevices()));
-  if (extraDevices && extraDevices.length > 0) {
-    return extraDevices.pop();
+  #enqueueUnique(devices) {
+    if (devices) {
+      for (const dev of devices) {
+        if (dev && !this.used.has(dev) && !this.unused.includes(dev)) {
+          this.unused.push(dev);
+        }
+      }
+    }
   }
+}
 
-  extraDevices.push(...(await navigator.hid.requestDevice({ filters })));
-  if (extraDevices && extraDevices.length > 0) {
-    return extraDevices.pop();
-  }
+const knownDevices = new KnownDevices();
 
-  throw new DeviceSelectionCancelled();
+/**
+ * Adds user-selected device to permitted device. Only for use outside of Web 
+ * Worker to establish permission for use within Web Worker.
+ * @returns {null}
+ */
+export async function reqestDeviceForWorker() {
+  const _ = await requestDevice();
+}
+
+/**
+ * Never returns the same device twice. 
+ * @returns {(HIDDevice|null)}
+ */
+export async function getUnusedDevice() {
+  return await knownDevices.getOrFetchUnused();
 }

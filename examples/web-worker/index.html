@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Web Worker Example</title>
+    <script type="importmap">
+        {
+            "imports": {
+                "led-matrix-controllers": "https://esm.sh/led-matrix-controllers@latest"
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Web Worker Example</h1>
+    <button id="connect1">Connect 1</button>
+    <button id="connect2">Connect 2</button>
+    <button id="draw1">Draw 1</button>
+    <button id="draw2">Draw 2</button>
+    <script type="module">
+        import { requestPortForWorker } from 'led-matrix-controllers';
+
+        const worker = new Worker(new URL('web-worker.js', import.meta.url), { type: 'module' });
+
+        document.getElementById('connect1').onclick = async (e) => {
+            await requestPortForWorker();
+            worker.postMessage('connect1');
+        }
+
+        document.getElementById('connect2').onclick = async (e) => {
+            await requestPortForWorker();
+            worker.postMessage('connect2');
+        }
+
+        document.getElementById('draw1').onclick = (e) => {
+            worker.postMessage('draw1');
+        }
+
+        document.getElementById('draw2').onclick = (e) => {
+            worker.postMessage('draw2');
+        }
+    </script>
+</body>
+</html>

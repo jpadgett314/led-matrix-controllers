@@ -5,6 +5,7 @@ export const VID_ARR = [0x32, 0xAC];
 export const PID = 0x0020;
 export const PID_ARR = [0x00, 0x20];
 
+// For PWM dimming (not for analog dimming/constant-current reduction!)
 export const GAMMA = Object.freeze([
   0, 0, 0, 0, 0, 0, 0, 1, 
   1, 1, 1, 1, 1, 1, 1, 1, 

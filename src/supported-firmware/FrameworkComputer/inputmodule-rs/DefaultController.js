@@ -1,4 +1,4 @@
-import { close, getPort } from '../../../web-serial/port.js';
+import { close, getUnusedPort } from '../../../web-serial/port.js';
 import { PortMutex } from '../../../web-serial/PortMutex.js';
 import { PortOperations } from '../../../web-serial/PortOperations.js';
 import { CommandAbstractionLayer } from './CommandAbstractionLayer.js';
@@ -10,12 +10,14 @@ export class DefaultController extends CommandAbstractionLayer {
   }
 
   async connect() {
-    const port = await getPort();
+    const port = await getUnusedPort();
 
     if (port?.connected) {
       await close(port);
       await port.open({ baudRate: 115200 });
       this.portMutex = new PortMutex(new PortOperations(port));
+    } else {
+      throw new Error('No Port Found');
     }
   }
 

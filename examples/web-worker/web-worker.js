@@ -23,8 +23,8 @@ onmessage = async (e) => {
 
     case ('draw1'):
       await controller1.drawGrayscale(
-        Array.from({ length: HEIGHT }, (_, i) => 
-          Array.from({ length: WIDTH }, (_, j) => 
+        Array.from({ length: HEIGHT }, (_, i) =>
+          Array.from({ length: WIDTH }, (_, j) =>
             (i % p != 0 ? 0.5 : 0) + (j % q != 0 ? 0.5 : 0)
           )
         ));
@@ -32,8 +32,8 @@ onmessage = async (e) => {
 
     case ('draw2'):
       await controller2.drawGrayscale(
-        Array.from({ length: HEIGHT }, (_, i) => 
-          Array.from({ length: WIDTH }, (_, j) => 
+        Array.from({ length: HEIGHT }, (_, i) =>
+          Array.from({ length: WIDTH }, (_, j) =>
             (i % q != 0 ? 0.5 : 0) + (j % p != 0 ? 0.5 : 0)
           )
         ));

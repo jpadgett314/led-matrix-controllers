@@ -1,4 +1,4 @@
-import { close, getPort } from '../../../web-serial/port.js';
+import { close, getUnusedPort } from '../../../web-serial/port.js';
 import { PortMutex } from '../../../web-serial/PortMutex.js';
 import { PortOperations } from '../../../web-serial/PortOperations.js';
 import { CommandAbstractionLayer } from './CommandAbstractionLayer.js';
@@ -10,7 +10,7 @@ export class SigrootController extends CommandAbstractionLayer {
   }
 
   async connect() {
-    const port = await getPort();
+    const port = await getUnusedPort();
 
     if (port?.connected) {
       await close(port);
@@ -23,6 +23,8 @@ export class SigrootController extends CommandAbstractionLayer {
     if (!this.#scaleInitialized) {
       await super.setGlobalAnalog(0x20);
       this.#scaleInitialized = true;
+    } else {
+      throw new Error('No Port Found');
     }
 
     await super.setMatrixPwm(matrix);

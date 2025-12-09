@@ -46,8 +46,8 @@
 
         async function randomNoise() {
             await controller.draw(
-                Array.from({ length: HEIGHT }, (_, i) => 
-                    Array.from({ length: WIDTH }, (_, j) => 
+                Array.from({ length: HEIGHT }, (_, i) =>
+                    Array.from({ length: WIDTH }, (_, j) =>
                         Math.random() > 0.75 ? 1 : 0
                     )
                 )
@@ -56,8 +56,8 @@
 
         async function gradient() {
             await controller.drawGrayscale(
-                Array.from({ length: HEIGHT }, (_, i) => 
-                    Array.from({ length: WIDTH }, (_, j) => 
+                Array.from({ length: HEIGHT }, (_, i) =>
+                    Array.from({ length: WIDTH }, (_, j) =>
                         ((i + j + Date.now() / 50) % HEIGHT) / HEIGHT
                     )
                 )
