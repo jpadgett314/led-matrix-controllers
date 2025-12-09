@@ -14,67 +14,55 @@
 <body>
     <h1>FPS Counter Example</h1>
     <h1 id="fps">FPS=0</h1>
-    <button id="connect">Connect Serial</button><br>
-    <button id="start1">Start Loop 1</button>
-    <button id="start2">Start Loop 2</button>
+    <button id="connect">Connect Serial</button>
+    <button id="start">Start Loop</button>
     <script type="module">
         import { DefaultController, HEIGHT, WIDTH } from 'led-matrix-controllers';
 
-        const controller = new DefaultController();
-
         const fpsCounter = document.getElementById('fps');
+
+        const controller = new DefaultController();
 
         let frames = 0;
         let t0 = Date.now();
-        let loop1 = false;
-        let loop2 = false;
 
         document.getElementById('connect').onclick = (e) => {
             controller.connect();
             e.target.disabled = true;
-        }
-
-        document.getElementById('start1').onclick = () => {
-            frames = 0;
-            t0 = Date.now();
-            loop1 = true; 
-            loop2 = false;
         };
 
-        document.getElementById('start2').onclick = () => {
+        document.getElementById('start').onclick = () => {
             frames = 0;
             t0 = Date.now();
-            loop1 = false;
-            loop2 = true;
+            loop();
         };
 
         async function loop() {
-            if (loop1 || loop2) {
-                frames++;
-                fpsCounter.innerText = `FPS=${1000 * frames / (Date.now() - t0)}`;
-                if (loop1) {
-                    await controller.draw(
-                        Array.from({ length: HEIGHT }, (_, i) => 
-                            Array.from({ length: WIDTH }, (_, j) => 
-                                Math.random() > 0.75 ? 1 : 0
-                            )
-                        )
-                    );
-                } else if (loop2) {
-                    await controller.drawGrayscale(
-                        Array.from({ length: HEIGHT }, (_, i) => 
-                            Array.from({ length: WIDTH }, (_, j) => 
-                                ((i + j + Date.now() / 50) % HEIGHT) / HEIGHT
-                            )
-                        )
-                    );
-                }
-            }
+            frames++;
+            fpsCounter.innerText = `FPS=${1000 * frames / (Date.now() - t0)}`;
+            await randomNoise();
             requestAnimationFrame(loop);
         }
 
-        loop();
+        async function randomNoise() {
+            await controller.draw(
+                Array.from({ length: HEIGHT }, (_, i) => 
+                    Array.from({ length: WIDTH }, (_, j) => 
+                        Math.random() > 0.75 ? 1 : 0
+                    )
+                )
+            );
+        }
 
+        async function gradient() {
+            await controller.drawGrayscale(
+                Array.from({ length: HEIGHT }, (_, i) => 
+                    Array.from({ length: WIDTH }, (_, j) => 
+                        ((i + j + Date.now() / 50) % HEIGHT) / HEIGHT
+                    )
+                )
+            );
+        }
     </script>
 </body>
 </html>
