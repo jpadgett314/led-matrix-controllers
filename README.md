@@ -4,9 +4,9 @@ Cross-firmware controllers for the [Framework Laptop 16 LED matrix module](https
 
 ## Supported Firmwares
 
-- https://github.com/FrameworkComputer/inputmodule-rs (Out-of-box default)
-- https://github.com/vddCore/sparkle-fw16
-- https://github.com/sigroot/FW_LED_Matrix_Firmware
+- [FrameworkComputer/inputmodule-rs](https://github.com/FrameworkComputer/inputmodule-rs) (Out-of-box default)
+- [vddCore/sparkle-fw16](https://github.com/vddCore/sparkle-fw16)
+- [sigroot/FW_LED_Matrix_Firmware](https://github.com/sigroot/FW_LED_Matrix_Firmware)
 
 If you maintain another firmware or a fork, please open an issue or submit a PR!
 
@@ -14,24 +14,23 @@ If you maintain another firmware or a fork, please open an issue or submit a PR!
 
 ### Installation
 
-#### Browser
-
-```html
-<script type="module">
-    import { DefaultController } from 'https://esm.sh/led-matrix-controllers@latest';
-    const controller = new DefaultController();
-    await controller.connect();
-    // ...
-</script>
-```
-
 #### Node.js
 
 ```bash
 npm install led-matrix-controllers
 ```
 
-Also see [examples/webpack/](examples/webpack/)
+#### CDN
+
+```html
+<script type="importmap">
+    {
+        "imports": {
+            "led-matrix-controllers": "https://esm.sh/led-matrix-controllers@latest"
+        }
+    }
+</script>
+```
 
 ### Usage
 
@@ -43,10 +42,8 @@ import { DefaultController, SigrootController, SparkleController } from 'led-mat
 
 const controller = new DefaultController();
 await controller.connect();
-await controller.draw( /* 34x9 matrix array */ );
+await controller.draw( /* 34x9 array of arrays of 0 to 1.0 */ );
 ```
-
-Also see [examples/sparkle.html](examples/sparkle.html)
 
 #### For specific interface
 
@@ -54,11 +51,9 @@ Also see [examples/sparkle.html](examples/sparkle.html)
 import { HardwareControllerFactory } from 'led-matrix-controllers';
 
 // connect to device
-const foo = HardwareControllerFactory.detectSerial();
-const bar = HardwareControllerFactory.detectHID();
+const serialController = HardwareControllerFactory.detectSerial();
+const hidController = HardwareControllerFactory.detectHID();
 ```
-
-Also see [examples/detect-firmware.html](examples/detect-firmware.html)
 
 ## Development
 

@@ -7,9 +7,9 @@ const controller1 = new DefaultController();
 
 const controller2 = new DefaultController();
 
-const p = Math.ceil(Math.random() * 3);
+const p = Math.ceil(Math.random() * 3) + 1;
 
-const q = Math.ceil(Math.random() * 3);
+const q = Math.ceil(Math.random() * 3) + 1;
 
 onmessage = async (e) => {
   switch (e.data) {
