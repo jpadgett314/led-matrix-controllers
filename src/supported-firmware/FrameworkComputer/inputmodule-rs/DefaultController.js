@@ -6,7 +6,7 @@ import { BitDepth } from './commands.js';
 
 export class DefaultController extends CommandAbstractionLayer {
   async bootloader() {
-    return super.bootloader();
+    await super.bootloader();
   }
 
   async connect() {
@@ -25,11 +25,11 @@ export class DefaultController extends CommandAbstractionLayer {
     switch (this.bitDepth ?? BitDepth.MONO_1BIT) {
 
       case (BitDepth.GRAY_8BIT):
-        super.drawGrayscale(matrix);
+        await super.drawGrayscale(matrix);
         break;
 
       case (BitDepth.MONO_1BIT):
-        super.draw(matrix);
+        await super.draw(matrix);
         break;
 
       default:
