@@ -5,7 +5,11 @@ export class PortOperations {
 
   async rx(length, timeout=3000) {
     if (this.#port === null) {
-      throw new Error('attempted RX before port initialization.');
+      throw new Error('attempted RX on uninitialized port.');
+    }
+
+    if (this.#port.readable === null) {
+      throw new Error('attempted RX on closed port.');
     }
 
     /*
@@ -37,7 +41,11 @@ export class PortOperations {
 
   async tx(buffer) {
     if (this.#port === null) {
-      throw new Error('attempted TX before port initialization.');
+      throw new Error('attempted TX on uninitialized port.');
+    }
+
+    if (this.#port.writable === null) {
+      throw new Error('attempted TX on closed port.');
     }
     
     /*

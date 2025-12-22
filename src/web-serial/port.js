@@ -21,7 +21,10 @@ export class PortUnavailable extends Error {
 async function requestPort() {
   try {
     if (navigator.serial.requestPort) {
-      return await navigator.serial.requestPort({ filters });
+      return Object.assign(
+        await navigator.serial.requestPort({ filters }),
+        { pickedByUser: true }
+      );
     } else {
       return null; // Web Worker
     }
@@ -47,8 +50,8 @@ class KnownPorts {
     let port = this.unused.pop();
     
     if (!port) {
-      const systemPorts = await navigator.serial.getPorts({ filters });
-      this.#enqueueUnique(systemPorts);
+      const knownPorts = await navigator.serial.getPorts({ filters });
+      this.#enqueueUnique(knownPorts);
       port = this.unused.pop();
     }
 
