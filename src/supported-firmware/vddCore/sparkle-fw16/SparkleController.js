@@ -45,7 +45,7 @@ export class SparkleController extends ReportAbstractionLayer {
       return {
         major: info.version_major,
         minor: info.version_minor
-      }
+      };
     } else {
       // Sparkle <=1.1.1: Glitter version unavailable 
       return { major: 1, minor: 0 };

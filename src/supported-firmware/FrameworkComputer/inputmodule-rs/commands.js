@@ -33,4 +33,4 @@ export const Pattern = Object.freeze({
 export const BitDepth = Object.freeze({
   GRAY_8BIT: '8-bit',
   MONO_1BIT: '1-bit',
-})
+});

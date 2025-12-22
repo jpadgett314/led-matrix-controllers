@@ -42,7 +42,7 @@ export class SigrootController extends CommandAbstractionLayer {
       return {
         major: match[1],
         minor: match[2]
-      }
+      };
     } else {
       return null;
     }

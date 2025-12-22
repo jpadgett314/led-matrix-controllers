@@ -12,7 +12,7 @@ export class HardwareControllerFactory {
       return c1;
     }
     
-    await c2.connect()
+    await c2.connect();
     if (await c2.verifyFirmware()) {
       return c2;
     } 
