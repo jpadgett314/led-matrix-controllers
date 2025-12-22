@@ -14,7 +14,7 @@ export const Reports = {
     bytes: 306,
     feature: true,
   },
-  GLITTER_GRID_PWM_CNTL: {
+  GLITTER_GRID_DC_SCALE_CNTL: {
     id: 0x04,
     bytes: 306,
     feature: true,
