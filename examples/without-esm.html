@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Script Tag Example</title>
+    <title>Example Without ESM</title>
 </head>
 <body>
-    <h1>Script Tag Example</h1>
+    <h1>Example Without ESM</h1>
     <button id="connect">Connect</button>
     <script src="https://cdn.jsdelivr.net/npm/led-matrix-controllers@latest/dist/led-matrix-controllers.umd.min.js"></script>
-    <script type="module">
+    <script>
         const { DefaultController, Pattern } = LedMatrixControllers;
 
         let controller = new DefaultController();
