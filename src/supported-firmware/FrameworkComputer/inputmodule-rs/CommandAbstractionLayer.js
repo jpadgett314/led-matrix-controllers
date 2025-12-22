@@ -124,4 +124,28 @@ export class CommandAbstractionLayer {
 
     return ver;
   }
+
+  async scrolling() {
+    let scrolling = false;
+
+    await this.portMutex.acquire(async p => {
+      await p.tx([...VID_ARR, Command.ANIMATE]);
+      scrolling = await p.rx(RX_PACKET_SZ);
+      scrolling = scrolling[0] != 0x00;
+    });
+
+    return scrolling;
+  }
+
+  async startScrolling() {
+    await this.portMutex.acquire(async p => {
+      await p.tx([...VID_ARR, Command.ANIMATE, 0x01]);
+    });
+  }
+
+  async stopStrolling() {
+    await this.portMutex.acquire(async p => {
+      await p.tx([...VID_ARR, Command.ANIMATE, 0x00]);
+    });
+  }
 }
