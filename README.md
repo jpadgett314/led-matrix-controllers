@@ -69,8 +69,20 @@ Setup development environment
 npm install
 ```
 
-Bundle (optional)
+Bundle (for locally testing minified/non-ESM builds)
 
 ```bash
 npm run build
+```
+
+Lint
+
+```
+npm run lint
+```
+
+Lint & Fix
+
+```
+npm run lint:fix
 ```
