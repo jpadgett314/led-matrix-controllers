@@ -1,6 +1,6 @@
-import { close, getUnusedPort } from '../../../web-serial/port.js';
-import { PortMutex } from '../../../web-serial/PortMutex.js';
-import { PortOperations } from '../../../web-serial/PortOperations.js';
+import { close, getUnusedPort } from '../../../environments/web/usb-serial/port.js';
+import { PortMutex } from '../../../environments/web/usb-serial/PortMutex.js';
+import { PortOperations } from '../../../environments/web/usb-serial/PortOperations.js';
 import { CommandAbstractionLayer } from './CommandAbstractionLayer.js';
 import { IDENTITY_STR_REGEX } from './commands.js';
 

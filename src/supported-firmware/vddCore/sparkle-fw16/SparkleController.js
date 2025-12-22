@@ -1,6 +1,6 @@
 import { HEIGHT, WIDTH } from '../../../hardware-constants.js';
-import { getUnusedDevice } from '../../../web-hid/device.js';
-import { HIDOperations } from '../../../web-hid/HIDOperations.js';
+import { getUnusedDevice } from '../../../environments/web/usb-hid/device.js';
+import { HIDOperations } from '../../../environments/web/usb-hid/HIDOperations.js';
 import { ReportAbstractionLayer } from './ReportAbstractionLayer.js';
 import { BootMode } from './reports.js';
 

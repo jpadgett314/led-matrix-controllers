@@ -1,4 +1,4 @@
-import { PID, VID } from '../hardware-constants.js';
+import { PID, VID } from '../../../hardware-constants.js';
 
 const filters = [{ usbVendorId: VID, usbProductId: PID }];
 

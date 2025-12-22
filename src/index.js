@@ -4,5 +4,5 @@ export { DefaultController } from './supported-firmware/FrameworkComputer/inputm
 export { BitDepth, Pattern } from './supported-firmware/FrameworkComputer/inputmodule-rs/commands.js';
 export { SigrootController } from './supported-firmware/sigroot/FW_LED_Matrix_Firmware/SigrootController.js'
 export { SparkleController } from './supported-firmware/vddCore/sparkle-fw16/SparkleController.js';
-export { DeviceSelectionCancelled, reqestDeviceForWorker } from './web-hid/device.js';
-export { PortSelectionCancelled, PortUnavailable, requestPortForWorker } from './web-serial/port.js';
+export { DeviceSelectionCancelled, reqestDeviceForWorker } from './environments/web/usb-hid/device.js';
+export { PortSelectionCancelled, PortUnavailable, requestPortForWorker } from './environments/web/usb-serial/port.js';
