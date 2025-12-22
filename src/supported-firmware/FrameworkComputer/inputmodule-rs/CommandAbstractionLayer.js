@@ -143,7 +143,7 @@ export class CommandAbstractionLayer {
     });
   }
 
-  async stopStrolling() {
+  async stopScrolling() {
     await this.portMutex.acquire(async p => {
       await p.tx([...VID_ARR, Command.ANIMATE, 0x00]);
     });
