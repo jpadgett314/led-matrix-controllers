@@ -1,5 +1,5 @@
 import { GAMMA, HEIGHT, VID_ARR, WIDTH } from '../../../hardware-constants.js';
-import { Command, RX_PACKET_SZ } from './commands.js';
+import { Command, Pattern, RX_PACKET_SZ } from './commands.js';
 
 export class CommandAbstractionLayer {
   constructor(portMutex = null) {
@@ -96,6 +96,10 @@ export class CommandAbstractionLayer {
   }
 
   async percent(percent) {
+    percent = Math.min(percent, 100);
+    percent = Math.max(percent, 0);
+    percent = Math.round(percent);
+
     await this.portMutex.acquireIdempotent(
       'drawMatrix',
       async p => {
