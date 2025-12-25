@@ -18,7 +18,7 @@
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^0.4.4",
-    "oxlint": "^0.9.1",
+    "oxlint": "^1.35.0",
     "rollup": "^4.53.3"
   },
   "scripts": {
