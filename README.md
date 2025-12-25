@@ -51,8 +51,8 @@ await controller.draw( /* 34x9 array of arrays of 0 to 1.0 */ );
 import { HardwareControllerFactory } from 'led-matrix-controllers';
 
 // connect to device
-const serialController = HardwareControllerFactory.detectSerial();
-const hidController = HardwareControllerFactory.detectHID();
+const serialController = await HardwareControllerFactory.detectSerial();
+const hidController = await HardwareControllerFactory.detectHID();
 ```
 
 ## Development
