@@ -92,14 +92,14 @@ export async function requestPortForWorker() {
 
 /**
  * Never returns the same port twice. 
- * @returns {(SerialPort|null)}
+ * @returns {Promise<SerialPort|null>}
  */
 export async function getUnusedPort() {
   return await knownPorts.getOrFetchUnused();
 }
 
 /**
- * Close port without throwing if already closed.
+ * Closes port (without throwing exception if already closed).
  * @param {SerialPort} port 
  */
 export async function close(port) {

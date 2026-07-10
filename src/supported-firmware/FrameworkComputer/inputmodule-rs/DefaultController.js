@@ -5,10 +5,9 @@ import { CommandAbstractionLayer } from './CommandAbstractionLayer.js';
 import { BitDepth } from './commands.js';
 
 export class DefaultController extends CommandAbstractionLayer {
-  async bootloader() {
-    await super.bootloader();
-  }
-
+  /**
+   * Automatically connects to an available LED Matrix Module
+   */
   async connect() {
     const port = await getUnusedPort();
 
@@ -21,6 +20,10 @@ export class DefaultController extends CommandAbstractionLayer {
     }
   }
 
+  /**
+   * Updates entire display
+   * @param {Array<Array<number>>} matrix `HEIGHT` rows of `WIDTH` columns of [0, 1]
+   */
   async draw(matrix) {
     switch (this.bitDepth ?? BitDepth.MONO_1BIT) {
 
@@ -37,6 +40,10 @@ export class DefaultController extends CommandAbstractionLayer {
     }
   }
 
+  /**
+   * Checks compatibility of firmware loaded on LED Matrix Module
+   * @returns {Promise<boolean>} 
+   */
   async verifyFirmware() {
     try {
       const version = await super.version();
@@ -50,9 +57,5 @@ export class DefaultController extends CommandAbstractionLayer {
     } catch {
       return false;
     }
-  }
-
-  async version() {
-    return super.version();
   }
 }

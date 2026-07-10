@@ -5,10 +5,16 @@ import { ReportAbstractionLayer } from './ReportAbstractionLayer.js';
 import { BootMode } from './reports.js';
 
 export class SparkleController extends ReportAbstractionLayer {
+  /**
+   * Reboots module to enter bootloader for USB firmware upload
+   */
   async bootloader() {
     await super.reboot(BootMode.BOOTSEL);
   }
 
+  /**
+   * Automatically connects to an available LED Matrix Module
+   */
   async connect() {
     const device = await getUnusedDevice();
 
@@ -20,10 +26,18 @@ export class SparkleController extends ReportAbstractionLayer {
     }
   }
   
+  /**
+   * Updates entire display
+   * @param {Array<Array<number>>} matrix `HEIGHT` rows of `WIDTH` columns of [0, 1]
+   */
   async draw(matrix) {
     await super.drawMatrix(matrix);
   }
 
+  /**
+   * Checks compatibility of firmware loaded on LED Matrix Module
+   * @returns {Promise<boolean>} 
+   */
   async verifyFirmware() {
     try {
       const info = await super.info();
@@ -36,6 +50,10 @@ export class SparkleController extends ReportAbstractionLayer {
     }
   }
 
+  /**
+   * Queries display module for version string
+   * @returns {Promise<{major: number, minor: number}>}
+   */
   async version() {
     const info = await super.info();
 

@@ -3,6 +3,9 @@ import { SigrootController } from './supported-firmware/sigroot/FW_LED_Matrix_Fi
 import { SparkleController } from './supported-firmware/vddCore/sparkle-fw16/SparkleController.js';
 
 export class HardwareControllerFactory {
+  /**
+   * @returns {Promise<DefaultController | SigrootController | null>}
+   */
   static async detectSerial() {
     const c1 = new DefaultController();
     const c2 = new SigrootController();
@@ -20,6 +23,9 @@ export class HardwareControllerFactory {
     return null;
   }
 
+  /**
+   * @returns {Promise<SparkleController | null>}
+   */
   static async detectHID() {
     const c1 = new SparkleController();
 

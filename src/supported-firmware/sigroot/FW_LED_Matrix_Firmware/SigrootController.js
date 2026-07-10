@@ -5,10 +5,9 @@ import { CommandAbstractionLayer } from './CommandAbstractionLayer.js';
 import { IDENTITY_STR_REGEX } from './commands.js';
 
 export class SigrootController extends CommandAbstractionLayer {
-  async bootloader() {
-    await super.bootloader();
-  }
-
+  /**
+   * Automatically connects to an available LED Matrix Module
+   */
   async connect() {
     const port = await getUnusedPort();
 
@@ -19,6 +18,10 @@ export class SigrootController extends CommandAbstractionLayer {
     }
   }
 
+  /**
+   * Updates entire display
+   * @param {Array<Array<number>>} matrix `HEIGHT` rows of `WIDTH` columns of [0, 1]
+   */
   async draw(matrix) {
     if (!this.#scaleInitialized) {
       await super.setGlobalAnalog(0x20);
@@ -30,10 +33,18 @@ export class SigrootController extends CommandAbstractionLayer {
     await super.setMatrixPwm(matrix);
   }
 
+  /**
+   * Checks compatibility of firmware loaded on LED Matrix Module
+   * @returns {Promise<boolean>} 
+   */
   async verifyFirmware() { 
     return await this.version() != null;
   }
 
+  /**
+   * Queries display module for version string
+   * @returns {Promise<{major: string, minor: string} | null>}
+   */
   async version() {
     const ident = await super.identityString();
     const match = ident.match(IDENTITY_STR_REGEX);
